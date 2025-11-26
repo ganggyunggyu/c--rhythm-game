@@ -1,0 +1,13 @@
+Unity에서 Create > RhythmGame > GameSettings로 생성하세요.
+
+설정값 참고:
+- perfectWindow: 50
+- greatWindow: 100
+- goodWindow: 150
+- perfectScore: 1000
+- greatScore: 800
+- goodScore: 500
+- noteSpawnLeadTime: 2
+- noteSpeed: 5
+- laneCount: 4
+- laneKeys: D, F, J, K
