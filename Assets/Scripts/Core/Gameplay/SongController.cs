@@ -31,11 +31,18 @@ namespace RhythmGame.Core.Gameplay
             }
         }
 
-        public void LoadAudio(AudioClip clip)
+        public bool LoadAudio(AudioClip clip)
         {
+            if (clip == null)
+            {
+                Debug.LogWarning("[SongController] AudioClip이 null입니다");
+                return false;
+            }
+
             _audioSource.clip = clip;
             _pausedTime = 0f;
             _isPlaying = false;
+            return true;
         }
 
         public void Play(float startTime = 0f)

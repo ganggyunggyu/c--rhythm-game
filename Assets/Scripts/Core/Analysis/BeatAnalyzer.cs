@@ -110,14 +110,15 @@ namespace RhythmGame.Core.Analysis
         private float EstimateBpm(List<float> peaks, float totalDuration)
         {
             if (peaks.Count < 2)
-                return 120f; // 기본값
+                return 120f;
 
-            // 피크 간 간격 계산
             var intervals = new List<float>();
             for (int i = 1; i < peaks.Count; i++)
                 intervals.Add(peaks[i] - peaks[i - 1]);
 
-            // 중앙값 계산
+            if (intervals.Count == 0)
+                return 120f;
+
             intervals.Sort();
             var medianInterval = intervals[intervals.Count / 2];
 

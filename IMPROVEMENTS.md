@@ -667,14 +667,14 @@ public static void EnsureExecutable(string toolName)
 7. [x] HIGH-005: UI null 체크 추가
 8. [x] HIGH-006: UI 이벤트 메모리 누수 수정
 
-### Phase 2: 품질 개선 (Medium)
-1. [ ] MED-001: DifficultyConfig ScriptableObject화
-2. [ ] MED-002: GameSettings 기본값 패턴 통일
-3. [ ] MED-003: GameStateUI 기본 클래스 추출
-4. [ ] MED-004: index.cs 파일 정리
-5. [ ] MED-005: SongController null 체크
-6. [ ] MED-006: YoutubeAudioDownloader 구조 개선
-7. [ ] MED-007: BeatAnalyzer 경계값 처리
+### Phase 2: 품질 개선 (Medium) ✅ 완료
+1. [x] MED-001: DifficultyConfig ScriptableObject화
+2. [x] MED-002: GameSettings 기본값 패턴 통일
+3. [x] MED-003: GameStateUI 기본 클래스 추출
+4. [x] MED-004: index.cs 파일 정리
+5. [x] MED-005: SongController null 체크
+6. [x] MED-006: YoutubeAudioDownloader 구조 개선 (스킵 - 현재 구조 적합)
+7. [x] MED-007: BeatAnalyzer 경계값 처리
 
 ### Phase 3: 리팩토링 (Low)
 1. [ ] LOW-001: ResultData 파일 분리

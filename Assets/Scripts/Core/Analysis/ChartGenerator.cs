@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using RhythmGame.Data;
 using UnityEngine;
@@ -6,13 +5,6 @@ using Random = UnityEngine.Random;
 
 namespace RhythmGame.Core.Analysis
 {
-    public enum Difficulty
-    {
-        Easy,
-        Normal,
-        Hard
-    }
-
     public class ChartGenerator
     {
         private readonly int _laneCount;
@@ -34,41 +26,12 @@ namespace RhythmGame.Core.Analysis
             };
 
             var beatTimes = analyzer.BeatTimes;
-            var config = GetDifficultyConfig(difficulty);
+            var config = DifficultyConfig.CreateDefault(difficulty);
 
             GenerateNotes(chart, beatTimes, config);
 
             Debug.Log($"차트 생성 완료 - 난이도: {difficulty}, 노트 수: {chart.notes.Count}");
             return chart;
-        }
-
-        private DifficultyConfig GetDifficultyConfig(Difficulty difficulty)
-        {
-            return difficulty switch
-            {
-                Difficulty.Easy => new DifficultyConfig
-                {
-                    NoteDensity = 0.5f,
-                    MaxSimultaneousNotes = 1,
-                    HoldNoteChance = 0f,
-                    PatternComplexity = 1
-                },
-                Difficulty.Normal => new DifficultyConfig
-                {
-                    NoteDensity = 0.75f,
-                    MaxSimultaneousNotes = 2,
-                    HoldNoteChance = 0.1f,
-                    PatternComplexity = 2
-                },
-                Difficulty.Hard => new DifficultyConfig
-                {
-                    NoteDensity = 1f,
-                    MaxSimultaneousNotes = 3,
-                    HoldNoteChance = 0.2f,
-                    PatternComplexity = 3
-                },
-                _ => GetDifficultyConfig(Difficulty.Normal)
-            };
         }
 
         private void GenerateNotes(ChartData chart, List<float> beatTimes, DifficultyConfig config)
@@ -78,14 +41,13 @@ namespace RhythmGame.Core.Analysis
 
             for (int i = 0; i < beatTimes.Count; i++)
             {
-                // 밀도에 따라 노트 생성 여부 결정
-                if (Random.value > config.NoteDensity)
+                if (Random.value > config.noteDensity)
                     continue;
 
                 var time = beatTimes[i];
                 var noteCount = DetermineNoteCount(config, patternIndex);
 
-                var lanes = SelectLanes(noteCount, lastLane, config.PatternComplexity);
+                var lanes = SelectLanes(noteCount, lastLane, config.patternComplexity);
                 foreach (var lane in lanes)
                 {
                     var noteType = DetermineNoteType(config, i, beatTimes.Count);
@@ -106,13 +68,11 @@ namespace RhythmGame.Core.Analysis
 
         private int DetermineNoteCount(DifficultyConfig config, int patternIndex)
         {
-            // 4박자마다 동시 노트 가능성 증가
             if (patternIndex % 4 == 0 && Random.value < 0.3f)
-                return Mathf.Min(2, config.MaxSimultaneousNotes);
+                return Mathf.Min(2, config.maxSimultaneousNotes);
 
-            // 8박자마다 더 많은 동시 노트
             if (patternIndex % 8 == 0 && Random.value < 0.2f)
-                return config.MaxSimultaneousNotes;
+                return config.maxSimultaneousNotes;
 
             return 1;
         }
@@ -153,7 +113,7 @@ namespace RhythmGame.Core.Analysis
             if (beatIndex > totalBeats - 4)
                 return NoteType.Tap;
 
-            return Random.value < config.HoldNoteChance ? NoteType.Hold : NoteType.Tap;
+            return Random.value < config.holdNoteChance ? NoteType.Hold : NoteType.Tap;
         }
 
         private float GetHoldDuration(int currentIndex, List<float> beatTimes)
@@ -166,14 +126,6 @@ namespace RhythmGame.Core.Analysis
                 return 0.5f;
 
             return beatTimes[endIndex] - beatTimes[currentIndex];
-        }
-
-        private class DifficultyConfig
-        {
-            public float NoteDensity;
-            public int MaxSimultaneousNotes;
-            public float HoldNoteChance;
-            public int PatternComplexity;
         }
     }
 }
