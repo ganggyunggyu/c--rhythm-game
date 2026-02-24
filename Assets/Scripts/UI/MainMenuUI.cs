@@ -1,5 +1,5 @@
-using RhythmGame.Core.Analysis;
 using RhythmGame.Core.Gameplay;
+using RhythmGame.Data;
 using RhythmGame.Utils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,6 +57,15 @@ namespace RhythmGame.UI
 
         private void OnPlayClicked()
         {
+            Debug.Log("[MainMenuUI] OnPlayClicked 호출됨");
+
+            if (GameManager.Instance == null)
+            {
+                Debug.LogError("[MainMenuUI] GameManager.Instance가 null입니다!");
+                ShowError("GameManager를 찾을 수 없습니다.");
+                return;
+            }
+
             string url;
 
             if (_urlInput != null && !string.IsNullOrEmpty(_urlInput.text))
@@ -66,19 +75,24 @@ namespace RhythmGame.UI
             else
             {
                 url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-                Debug.Log($"URL 입력창이 없어서 테스트 URL 사용: {url}");
+                Debug.Log($"[MainMenuUI] URL 입력창이 없어서 테스트 URL 사용: {url}");
             }
+
+            Debug.Log($"[MainMenuUI] URL 검증 시작: {url}");
 
             if (!YoutubeUrlParser.IsValidYoutubeUrl(url))
             {
+                Debug.LogWarning($"[MainMenuUI] 유효하지 않은 URL: {url}");
                 ShowError("유효한 YouTube URL을 입력해주세요.");
                 return;
             }
 
+            Debug.Log("[MainMenuUI] URL 검증 통과");
             ClearError();
             var difficulty = _difficultyDropdown != null ? (Difficulty)_difficultyDropdown.value : Difficulty.Normal;
-            Debug.Log($"게임 시작: URL={url}, Difficulty={difficulty}");
+            Debug.Log($"[MainMenuUI] 게임 시작 요청: URL={url}, Difficulty={difficulty}");
             GameManager.Instance.LoadFromYoutube(url, difficulty);
+            Debug.Log("[MainMenuUI] LoadFromYoutube 호출 완료");
         }
 
         private void OnLocalFileClicked()
